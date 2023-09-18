@@ -1,12 +1,21 @@
+import { Outlet } from "react-router-dom";
+import Footer from "./components/Footer.jsx";
+import { Header } from "./components/Header.jsx";
+import { Container } from "react-bootstrap";
 
-import './App.css'
+
 function App() {
-
-    return (
-        <div className="App">
-
-        </div>
-    )
+  return (
+    <>
+      <Header />
+      <main className="my-3">
+        <Container>
+            <Outlet/>
+        </Container>
+      </main>
+      <Footer />
+    </>
+  );
 }
 
-export default App
+export default App;
