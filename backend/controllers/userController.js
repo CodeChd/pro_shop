@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
 import asyncHandler from "../middleware/asynHandler.js";
 import User from "../models/userModel.js";
+import generateToken from "../utils/genToken.js";
 
 // @desc    Auth User & get token
 // @routes  POST /api/users/login
@@ -11,19 +11,10 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    //Set jwt
+    generateToken(res, user._id);
 
-    //set jwt as http-only cookie
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
-      maxAge: 30 * 24 * 60,
-    });
-
-    res.json({
+    res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -39,28 +30,96 @@ const authUser = asyncHandler(async (req, res) => {
 // @routes  POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  res.send("Register user");
+  const { name, email, password } = req.body;
+
+  const userExist = await User.findOne({ name, email });
+
+  if (userExist) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    // password is hased with mongoose middleware
+    password,
+  });
+
+  if (user) {
+    //Set jwt
+    generateToken(res, user._id);
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid user data");
+  }
 });
 
 // @desc    Logout User  / clear cookie
 // @routes  POST /api/users/logout
 // @access  Private
 const logoutUser = asyncHandler(async (req, res) => {
-  res.send("Logout user");
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.status(200).json({ message: "Logout Successfully" });
 });
 
 // @desc    Get user profile
 // @routes  POST /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  res.send("Get User Profile");
+  const user = await User.findOne(req.user._id);
+
+  if (user) {
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
+  }
 });
 
 // @desc    Update user profile
 // @routes  PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.send("Update User Profile");
+  const user = await User.findOne(req.user._id);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+  }
+
+  //bc pass is hashed
+  if (req.body.password) {
+    // mongoose middleware will trigger for this expression
+    user.password = req.body.password;
+
+    const updateUser = await user.save();
+
+    res.status(200).json({
+      _id: updateUser._id,
+      name: updateUser.name,
+      email: updateUser.email,
+      isAdmin: updateUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
+  }
 });
 
 // @desc    Get users
