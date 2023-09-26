@@ -19,9 +19,11 @@ export const Header = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const logoutHandler = async (e) => {
+  
+
+  const logoutHandler = async(e) => {
     try {
-      await logoutApiCall().unwrap();
+     await logoutApiCall().unwrap();
       dispatch(logoutCredentials());
       navigate("/");
     } catch (error) {

@@ -7,15 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { savePaymentMethod } from "../slices/cartSlice";
 
 const PaymentScreen = () => {
+  const { shippingAddress } = useSelector((state) => state.cart);
+  const [payemntMethod, setPaymentMethod] = useState("PayPal");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [payemntMethod, setPaymentMethod] = useState("PayPal");
-
-  const { shippingAddress } = useSelector((state) => state.cart);
-
   useEffect(() => {
-    if (!shippingAddress) {
+    if (!shippingAddress.address) {
       navigate("/shipping");
     }
   }, [shippingAddress, navigate]);
