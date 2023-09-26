@@ -1,4 +1,12 @@
-import { Navbar, Nav, Container, Badge, NavDropdown } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Badge,
+  NavDropdown,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import logo from "../assets/logo.png";
 import { LinkContainer } from "react-router-bootstrap";
@@ -19,11 +27,9 @@ export const Header = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  
-
-  const logoutHandler = async(e) => {
+  const logoutHandler = async (e) => {
     try {
-     await logoutApiCall().unwrap();
+      await logoutApiCall().unwrap();
       dispatch(logoutCredentials());
       navigate("/");
     } catch (error) {
@@ -58,6 +64,7 @@ export const Header = () => {
               </LinkContainer>
               {userInfo ? (
                 <NavDropdown title={userInfo.name.split(" ")[0]} id="username">
+                  
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
@@ -65,6 +72,7 @@ export const Header = () => {
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
+             
               ) : (
                 <LinkContainer to="/login">
                   <Nav.Link>
@@ -72,6 +80,19 @@ export const Header = () => {
                   </Nav.Link>
                 </LinkContainer>
               )}
+                 {userInfo && userInfo.isAdmin && (
+                  <NavDropdown title="View">
+                    <LinkContainer to="/admin/productlist">
+                      <NavDropdown.Item>Products</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/userlist">
+                      <NavDropdown.Item>Users</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/orderlist">
+                      <NavDropdown.Item>Orders</NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                )}
             </Nav>
           </Navbar.Collapse>
         </Container>
