@@ -75,7 +75,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get user profile
-// @routes  POST /api/users/profile
+// @routes  GET /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findOne(req.user._id);
@@ -98,28 +98,30 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findOne(req.user._id);
+
+  //bcrypt pass is hashed
+
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-  }
-
-  //bcrypt pass is hashed
-  if (req.body.password) {
-    // mongoose middleware will trigger for this expression
-    user.password = req.body.password;
-
-    const updateUser = await user.save();
-
-    res.status(200).json({
-      _id: updateUser._id,
-      name: updateUser.name,
-      email: updateUser.email,
-      isAdmin: updateUser.isAdmin,
-    });
   } else {
     res.status(404);
     throw new Error("User not found!");
   }
+
+  if (req.body.password) {
+    // mongoose middleware will trigger for this expression
+    user.password = req.body.password;
+  }
+
+  const updateUser = await user.save();
+
+  res.status(200).json({
+    _id: updateUser._id,
+    name: updateUser.name,
+    email: updateUser.email,
+    isAdmin: updateUser.isAdmin,
+  });
 });
 
 // @desc    Get users

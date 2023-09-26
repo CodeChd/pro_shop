@@ -1,13 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import {
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Form,
-  Button,
-  Card,
-} from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Button, Card } from "react-bootstrap";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -70,23 +62,13 @@ const OrderScreen = () => {
     return actions.order.capture().then(async (details) => {
       try {
         await payOrder({ id, details });
+        console.log(details);
         refetch();
         toast.success("Payment Successful");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
     });
-  };
-
-  //fake req
-  // const onApproveTest = async () => {
-  //   await payOrder({ id, details: { payer: {} } });
-  //   refetch();
-  //   toast.success("Payment Successful");
-  // };
-
-  const onError = (err) => {
-    toast.error(err.message);
   };
 
   const createOrder = async (data, actions) => {
@@ -101,6 +83,17 @@ const OrderScreen = () => {
         ],
       })
       .then((orderId) => orderId);
+  };
+
+  //fake req
+  // const onApproveTest = async () => {
+  //   await payOrder({ id, details: { payer: {} } });
+  //   refetch();
+  //   toast.success("Payment Successful");
+  // };
+
+  const onError = (err) => {
+    toast.error(err.message);
   };
 
   return isLoading ? (
