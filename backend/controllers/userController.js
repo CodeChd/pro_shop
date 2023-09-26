@@ -103,7 +103,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     user.email = req.body.email || user.email;
   }
 
-  //bc pass is hashed
+  //bcrypt pass is hashed
   if (req.body.password) {
     // mongoose middleware will trigger for this expression
     user.password = req.body.password;
