@@ -7,6 +7,7 @@ import {
   useGetOrderDetailsQuery,
   useGetPayPalClientIdQuery,
   usePayOrderMutation,
+  useDeliverOrderMutation,
 } from "../slices/orderApiSlice";
 import { addDecimals } from "../utils/cartUtils";
 import toast from "react-hot-toast";
@@ -23,6 +24,9 @@ const OrderScreen = () => {
   } = useGetOrderDetailsQuery(id);
 
   const [payOrder, { isLoading: loadingPay, error }] = usePayOrderMutation();
+
+  const [deliverOrder, { isLoading: loadingDeliver, error: deliverError }] =
+    useDeliverOrderMutation();
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
   const {
@@ -83,7 +87,7 @@ const OrderScreen = () => {
         ],
       })
       .then((orderId) => orderId);
-  };  
+  };
 
   //fake req
   // const onApproveTest = async () => {
@@ -94,6 +98,16 @@ const OrderScreen = () => {
 
   const onError = (err) => {
     toast.error(err.message);
+  };
+
+  const deliverOrderHandler = async () => {
+    try {
+      await deliverOrder(id);
+      refetch();
+      toast.success("Order Delivered");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
   };
 
   return isLoading ? (
@@ -212,6 +226,23 @@ const OrderScreen = () => {
               )}
 
               {/* MARK AS DELIVERED PLACEHOLDER */}
+
+              {loadingDeliver && <Loader />}
+
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverOrderHandler}
+                    >
+                      Mark as Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>

@@ -19,7 +19,7 @@ const CartScreen = () => {
 
   const { cartItems } = useSelector((state) => state.cart);
 
-  //if logged in redirect to shipping route else sign in first
+  //if logged in redirect to shipping route else sign in first 
   const checkoutHandler = () => {
     navigate("/login?redirect=/shipping");
   };
