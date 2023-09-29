@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import {
   useGetProductsDetailQuery,
   useUpdateProductMutation,
+  useUplaodProductImageMutation,
 } from "../../slices/productsApiSlice";
 import FormContainer from "../../components/FormContainer";
 
@@ -27,6 +28,9 @@ const ProductEditScreen = () => {
     updateProduct,
     { isLoading: loadingUpdate, error: productUpdateError },
   ] = useUpdateProductMutation();
+
+  const [uploadProductImage, { isLoading: loadingUpload, error: uploadError }] =
+    useUplaodProductImageMutation();
 
   const {
     data: product,
@@ -63,13 +67,26 @@ const ProductEditScreen = () => {
       description,
     };
 
-    const res = await updateProduct(product).unwrap();
+    const res = await updateProduct(product);
 
     if (res.error) {
       toast.error(res.error);
     } else {
       toast.success("Product Updated");
       navigate("/admin/productlist");
+    }
+  };
+
+  const uploadFileHandler = async (e) => {
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    try {
+      const res = await uploadProductImage(formData).unwrap();
+      toast.success(res.message);
+      setImage(res.image);
+      // console.log(res.image);
+    } catch (err) {
+      toast.error(err?.data?.message);
     }
   };
 
@@ -107,6 +124,20 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             {/* image placeholder */}
+            <Form.Group controlId="image" className="my-2">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter image url"
+                value={image}
+                onChange={(e) => setImage}
+              />
+              <Form.Control
+                type="file"
+                label="Choose file"
+                onChange={uploadFileHandler}
+              />
+            </Form.Group>
 
             <Form.Group controlId="brand" className="my-2 ">
               <Form.Label>Brand</Form.Label>
