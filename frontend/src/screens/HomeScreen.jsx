@@ -4,6 +4,9 @@ import Products from "../components/Products";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import { Link, useParams } from "react-router-dom";
+import Paginate from "../components/Paginate";
+import ProductCarousel from "../components/ProductCarousel";
 
 /////
 // import { useEffect, useState } from "react"; redux will be used
@@ -22,10 +25,15 @@ import Message from "../components/Message";
 /////
 
 const HomeScreen = () => {
-  const { data: products, isLoading, isError } = useGetProductsQuery();
+  const { pageNumber, keyword } = useParams();
+
+  const { data, isLoading, isError } = useGetProductsQuery({
+    pageNumber,
+    keyword,
+  });
 
   return (
-    <div className="d-flex align-content-center " id="homeScreen">
+    <div className="d-flex flex-column  align-content-center " id="homeScreen">
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -33,16 +41,33 @@ const HomeScreen = () => {
           {isError?.data?.message || isError.error}
         </Message>
       ) : (
-        <div className="d-block">
-          <h1>Latest Products</h1>
-          <Row>
-            {products.map((product) => (
+        <>
+          {!keyword ? (
+            <ProductCarousel />
+          ) : (
+            <Link to="/" className="align-self-start my-2 btn btn-dark">
+              Go Back
+            </Link>
+          )}
+          {!keyword ? (
+            <h1>Latest Products</h1>
+          ) : (
+            <h1>Search results for {keyword}</h1>
+          )}
+
+          <Row> 
+            {data.products.map((product) => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
                 <Products product={product} />
               </Col>
             ))}
           </Row>
-        </div>
+          <Paginate
+            pages={data.pages}
+            page={data.page}
+            keyword={keyword ? keyword : ""}
+          />
+        </>
       )}
     </div>
   );

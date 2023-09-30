@@ -6,17 +6,37 @@ import Loader from "../../components/Loader";
 import {
   useCreateProductMutation,
   useGetProductsQuery,
+  useDeleteProductMutation,
 } from "../../slices/productsApiSlice";
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import Paginate from "../../components/Paginate";
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const { pageNumber } = useParams();
+  const {
+    data,
+    isLoading,
+    error,
+    refetch: refetchProducts,
+  } = useGetProductsQuery({ pageNumber });
 
   const [createProduct, { isLoading: loadingProduct, error: productError }] =
     useCreateProductMutation();
 
-  const deleteHandler = (id) => {
-    console.log(id);
+  const [deleteProduct, { isLoading: deleteLoading, refetch }] =
+    useDeleteProductMutation();
+
+  const deleteHandler = async (id) => {
+    if (confirm("Are you sure you want to delete this product")) {
+      try {
+        const res = await deleteProduct(id).unwrap();
+        toast.success(res.message);
+        refetchProducts();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
   };
 
   const addProductHandler = async () => {
@@ -61,7 +81,7 @@ const ProductListScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {data.products.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
@@ -86,6 +106,7 @@ const ProductListScreen = () => {
               ))}
             </tbody>
           </Table>
+          <Paginate isAdmin={true} page={data.page} pages={data.pages}/>
         </>
       )}
     </>

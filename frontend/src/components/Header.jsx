@@ -16,6 +16,7 @@ import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logoutCredentials } from "../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import SearchBox from "./SearchBox";
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ export const Header = () => {
 
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
+              <SearchBox />
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <FaShoppingCart /> Cart
@@ -64,7 +66,6 @@ export const Header = () => {
               </LinkContainer>
               {userInfo ? (
                 <NavDropdown title={userInfo.name.split(" ")[0]} id="username">
-                  
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
@@ -72,7 +73,6 @@ export const Header = () => {
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
-             
               ) : (
                 <LinkContainer to="/login">
                   <Nav.Link>
@@ -80,19 +80,19 @@ export const Header = () => {
                   </Nav.Link>
                 </LinkContainer>
               )}
-                 {userInfo && userInfo.isAdmin && (
-                  <NavDropdown title="View">
-                    <LinkContainer to="/admin/productlist">
-                      <NavDropdown.Item>Products</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/userlist">
-                      <NavDropdown.Item>Users</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/orderlist">
-                      <NavDropdown.Item>Orders</NavDropdown.Item>
-                    </LinkContainer>
-                  </NavDropdown>
-                )}
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown title="View">
+                  <LinkContainer to="/admin/productlist">
+                    <NavDropdown.Item>Products</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/userlist">
+                    <NavDropdown.Item>Users</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/orderlist">
+                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
