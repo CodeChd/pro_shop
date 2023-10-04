@@ -43,8 +43,8 @@ const ProductListScreen = () => {
     if (confirm("Are you sure you want create a new product")) {
       try {
         await createProduct();
-        refetch();
-      } catch (err) {
+        toast.success("You created a new product");
+      } catch (err) { 
         toast.error(err?.data?.message || err.error);
       }
     }
@@ -106,7 +106,7 @@ const ProductListScreen = () => {
               ))}
             </tbody>
           </Table>
-          <Paginate isAdmin={true} page={data.page} pages={data.pages}/>
+          <Paginate isAdmin={true} page={data.page} pages={data.pages} />
         </>
       )}
     </>

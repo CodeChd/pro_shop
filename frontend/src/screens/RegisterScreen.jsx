@@ -20,13 +20,11 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  //   Get redirect query string value
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/";
 
   useEffect(() => {
-    //check if user already exist in local storage if so, navigate to shipping route
     if (userInfo) {
       navigate(redirect);
     }
@@ -113,7 +111,6 @@ const RegisterScreen = () => {
         <Col>
           Have an account?
           <Link
-            //vice versa
             to={redirect ? `/login?redirect=${redirect}` : "/login"}
             className="text-black"
           >

@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 
 const UsersListScreen = () => {
   const { data: users, isLoading, error, refetch } = useGetUsersQuery();
-  const [deleteUser, { isLoading: deletingUser }] = useDeleteUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
   const deleteHandler = async (id) => {
     if (confirm("Are you sure?")) {
       try {
@@ -32,7 +32,7 @@ const UsersListScreen = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped hover responsive className="table-sm my-2">
+        <Table striped bordered hover responsive className="table-sm my-2">
           <thead>
             <tr>
               <th>ID</th>

@@ -14,7 +14,7 @@ const PlaceOrderScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
-    shippingAddress, 
+    shippingAddress,
     paymentMethod,
     cartItems,
     ItemsPrice,

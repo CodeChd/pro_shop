@@ -1,4 +1,3 @@
-// import {productsItems} from "../product"; // fake data
 import { Row, Col } from "react-bootstrap";
 import Products from "../components/Products";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
@@ -7,22 +6,7 @@ import Message from "../components/Message";
 import { Link, useParams } from "react-router-dom";
 import Paginate from "../components/Paginate";
 import ProductCarousel from "../components/ProductCarousel";
-
-/////
-// import { useEffect, useState } from "react"; redux will be used
-// import axios from "axios"; redux will be used
-
-// const [products, setProducts] = useState([]);
-
-// useEffect(() => {
-//   const fetchProducts = async () => {
-//     const { data } = await axios.get("/api/products");
-//     setProducts(data);
-//   };
-
-//   fetchProducts();
-// }, []);
-/////
+import Meta from "../components/Meta";
 
 const HomeScreen = () => {
   const { pageNumber, keyword } = useParams();
@@ -42,6 +26,7 @@ const HomeScreen = () => {
         </Message>
       ) : (
         <>
+          <Meta title="Welcome to ProShop" />
           {!keyword ? (
             <ProductCarousel />
           ) : (
@@ -55,7 +40,7 @@ const HomeScreen = () => {
             <h1>Search results for {keyword}</h1>
           )}
 
-          <Row> 
+          <Row>
             {data.products.map((product) => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
                 <Products product={product} />

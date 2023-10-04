@@ -23,7 +23,6 @@ export const updateCart = (state) => {
     Number(state.taxPrice)
   ).toFixed(2);
 
-  //pivot
   localStorage.setItem("cart", JSON.stringify(state));
 
   return state;

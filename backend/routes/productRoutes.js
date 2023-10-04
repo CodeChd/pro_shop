@@ -22,19 +22,4 @@ router
 
 router.route("/:id/reviews").post(protect, createProductReview);
 
-// common router
-// router.get(
-//   "/",
-//   asyncHandler(async (req, res) => {
-
-//   })
-// );
-
-// router.get(
-//   "/:id",
-//   asyncHandler(async (req, res) => {
-
-//   })
-// );
-
 export default router;

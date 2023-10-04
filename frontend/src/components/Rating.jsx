@@ -14,7 +14,7 @@ const Rating = ({ value, text }) => {
       </span>
       <span>
         {value >= 2 ? (
-          <FaStar /> 
+          <FaStar />
         ) : value >= 1.5 ? (
           <FaStarHalfAlt />
         ) : (

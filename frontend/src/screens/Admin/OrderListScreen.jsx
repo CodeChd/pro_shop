@@ -4,9 +4,15 @@ import { LinkContainer } from "react-router-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { useGetOrdersQuery } from "../../slices/orderApiSlice";
+import Paginate from "../../components/Paginate";
+import { useParams } from "react-router-dom";
 
 const OrderListScreen = () => {
-  const { data: orders, isLoading, error } = useGetOrdersQuery();
+  const { pageNumber } = useParams();
+
+  console.log(pageNumber);
+
+  const { data, isLoading, error } = useGetOrdersQuery({ pageNumber });
 
   return (
     <>
@@ -16,7 +22,7 @@ const OrderListScreen = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped hover responsive className="table-sm my-2">
+        <Table striped bordered hover responsive className="table-sm my-2">
           <thead>
             <tr>
               <th>ID</th>
@@ -29,7 +35,7 @@ const OrderListScreen = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {data.orders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
@@ -60,6 +66,17 @@ const OrderListScreen = () => {
             ))}
           </tbody>
         </Table>
+      )}
+
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Paginate
+          isAdmin={true}
+          page={data.page}
+          pages={data.pages}
+          isOrderList={true}
+        />
       )}
     </>
   );

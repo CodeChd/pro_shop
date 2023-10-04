@@ -9,7 +9,7 @@ function App() {
     <>
       <Header />
       <Toaster position="top-right" reverseOrder="false" />
-      <main className="my-4" >
+      <main className="my-4">
         <Container>
           <Outlet />
         </Container>

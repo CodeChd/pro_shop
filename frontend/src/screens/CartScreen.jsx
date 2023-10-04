@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../slices/cartSlice";
+import Meta from "../components/Meta";
 
 const CartScreen = () => {
   const navigate = useNavigate();
@@ -19,7 +20,6 @@ const CartScreen = () => {
 
   const { cartItems } = useSelector((state) => state.cart);
 
-  //if logged in redirect to shipping route else sign in first 
   const checkoutHandler = () => {
     navigate("/login?redirect=/shipping");
   };
@@ -34,6 +34,7 @@ const CartScreen = () => {
 
   return (
     <Row>
+      <Meta title="Cart" />
       <Col md={8}>
         <h1>Shopping Cart</h1>
 
@@ -42,7 +43,7 @@ const CartScreen = () => {
             Your cart is empty <Link to="/">go back</Link>{" "}
           </Message>
         ) : (
-          <ListGroup variant="flush">
+          <ListGroup variant="flush" >
             {cartItems.map((item) => (
               <ListGroup.Item key={item._id}>
                 <Row>

@@ -12,6 +12,8 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/index.css";
 
+import { HelmetProvider } from "react-helmet-async";
+
 //ROUTES FOR SCREENS
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
@@ -59,6 +61,10 @@ const router = createBrowserRouter(
       {/* Admin route */}
       <Route path="" element={<AdminRoute />}>
         <Route path="/admin/orderlist" element={<OrderListScreen />} />
+        <Route
+          path="/admin/orderlist/:pageNumber"
+          element={<OrderListScreen />}
+        />
         <Route path="/admin/productlist" element={<ProductListScreen />} />
         <Route
           path="/admin/productlist/:pageNumber"
@@ -74,10 +80,12 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PayPalScriptProvider deferLoading={true}>
-        <RouterProvider router={router} />
-      </PayPalScriptProvider>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <PayPalScriptProvider deferLoading={true}>
+          <RouterProvider router={router} />
+        </PayPalScriptProvider>
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>
 );

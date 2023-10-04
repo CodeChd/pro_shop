@@ -10,10 +10,9 @@ const errHandler = (err, req, res, next) => {
 
   if (err.name === "CastError" && err.kind === "ObjectId") {
     message = "Resource not found!";
-    statusCode = 404;
+    statusCode = 404; 
   }
 
-  //custom response if error occurs
   res.status(statusCode).json({
     message,
     stack: process.env.NODE_ENV === "production" ? "nice" : err.stack,

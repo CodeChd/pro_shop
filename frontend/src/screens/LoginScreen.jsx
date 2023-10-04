@@ -23,10 +23,7 @@ const LoginScreen = () => {
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/";
 
-  //navigate to Home if logged in else log in first
   useEffect(() => {
-    //check if user already exist in local storage if so, navigate to shipping route
-
     if (userInfo) {
       navigate(redirect);
     }
@@ -34,10 +31,8 @@ const LoginScreen = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
     try {
       const res = await login({ email, password }).unwrap();
-      //set res data to localStorage that will maintain state over refresh or requests
       dispatch(setCredentials({ ...res }));
       navigate(redirect);
     } catch (e) {
@@ -86,7 +81,6 @@ const LoginScreen = () => {
         <Col>
           New Customer?
           <Link
-            //if logged in redirect to shipping route else you'll be able to register
             to={redirect ? `/register?redirect=${redirect}` : "/register"}
             className="text-black"
           >

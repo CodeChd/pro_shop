@@ -13,28 +13,13 @@ import Rating from "../components/Rating";
 import {
   useGetProductsDetailQuery,
   useCreateReviewMutation,
-  productsApiSlice,
 } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useState } from "react";
 import { addToCart } from "../slices/cartSlice";
 import toast from "react-hot-toast";
-
-/// redux will be used
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const [product, setProducts] = useState([]);
-// useEffect(() => {
-//   const fetchProducts = async () => {
-//     const { data } = await axios.get(`/api/products/${productId}`);
-//     setProducts(data);
-//   };
-
-//   fetchProducts();
-// }, [productId]);
-////
+import Meta from "../components/Meta";
 
 const ProductScreen = () => {
   //item id
@@ -42,7 +27,6 @@ const ProductScreen = () => {
 
   console.log(productId);
 
-  //actions
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -53,7 +37,7 @@ const ProductScreen = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  //fetch products from redux
+  //fetch products from rtk
   const {
     data: product,
     isLoading,
@@ -94,6 +78,7 @@ const ProductScreen = () => {
         </Message>
       ) : (
         <div>
+          <Meta title={product.name} />
           <Link className="btn btn-light my-3" to="/">
             Go back
           </Link>
